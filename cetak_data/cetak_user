@@ -1,0 +1,58 @@
+<?php ob_start(); ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>cetak user PDF</title>
+</head>
+<style type="text/css">
+	table{
+		border-collapse:collapse;
+		table-layout: fixed;
+		width: 630px;
+
+	}
+	table td{
+		word-wrap: break-word;
+		width: 20%;
+	}
+</style>
+<body>
+<h1 style="text-align: center;">Data User</h1>
+<table border="1" width="100%">
+	
+	<th>Kode user</th>
+	<th>Nama User</th>
+	<th>Username</th>
+
+	<?php include 'library/inc.connection.php';
+
+	$query=mysql_query("SELECT * FROM user");
+$row=mysql_num_rows($query);
+if ($row>0) {
+	while ($data=mysql_fetch_array($query)) {
+		
+	
+	 ?>
+
+	 <tr><td><?php echo $data['kode_user']; ?></td>
+<td><?php echo $data['nama_user']; ?></td>
+<td><?php echo $data['username']; ?></td>
+	 </tr>
+	 <?php }
+	
+}else{
+
+	 ?>
+	 <tr><td colspan="3">data tidak ada</td></tr>
+	 <?php }
+$html=ob_get_contents();
+ob_end_clean();
+require_once('pdf/pdf.php');
+$pdf=new HTML2PDF('P','A4','en');
+$pdf->WriteHTML($html);
+$pdf->Output('data user.pdf','D')
+	 ?>
+</table>
+</body>
+</html>
